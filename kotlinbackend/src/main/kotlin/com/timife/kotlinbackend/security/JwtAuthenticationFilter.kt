@@ -36,7 +36,6 @@ class JwtAuthenticationFilter(
             if (jwtService.isTokenValid(jwtToken, foundUser)) {
                 updateContext(foundUser, request)
             }
-
         }
         filterChain.doFilter(request,response)
     }
