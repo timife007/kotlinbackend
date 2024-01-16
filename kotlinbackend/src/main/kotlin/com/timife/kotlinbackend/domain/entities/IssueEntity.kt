@@ -1,5 +1,6 @@
 package com.timife.kotlinbackend.domain.entities
 
+import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import lombok.AllArgsConstructor
@@ -13,7 +14,7 @@ import org.springframework.data.annotation.Id
 @NoArgsConstructor
 @AllArgsConstructor
 data class IssueEntity(
-    @Id
+    @EmbeddedId
     val isbn: String,
     val date: String
 )

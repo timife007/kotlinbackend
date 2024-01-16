@@ -1,27 +1,52 @@
-package com.timife.kotlinbackend.security
+package com.timife.kotlinbackend.configs
 
 import com.timife.kotlinbackend.repositories.UserRepository
-import lombok.RequiredArgsConstructor
+import com.timife.kotlinbackend.security.JwtService
+import com.timife.kotlinbackend.services.AuthService
+import com.timife.kotlinbackend.services.AuthServiceImpl
+import com.timife.kotlinbackend.services.CustomUserDetailsService
+import org.springframework.security.core.userdetails.User
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
+
 @Configuration
-@RequiredArgsConstructor
 class ApplicationConfig {
 
     @Bean
     fun userDetailsService(userRepository: UserRepository): UserDetailsService {
+<<<<<<< HEAD:kotlinbackend/src/main/kotlin/com/timife/kotlinbackend/security/ApplicationConfig.kt
         return UserDetailsService { username ->
             userRepository.findByEmail(username) ?: throw UsernameNotFoundException("User not found")
         }
+=======
+        return CustomUserDetailsService(userRepository)
+    }
+
+    @Bean
+    fun getAuthService(
+        userRepository: UserRepository,
+        userDetailsService: UserDetailsService,
+        jwtService: JwtService,
+        authenticationManager: AuthenticationManager
+    ): AuthService {
+        return AuthServiceImpl(
+            userDetailService = userDetailsService,
+            passwordEncoder = passwordEncoder(),
+            jwtService = jwtService,
+            authManager = authenticationManager,
+            userRepository = userRepository
+        )
+>>>>>>> 866238509897fcb443086dd144212bba4e4425f5:kotlinbackend/src/main/kotlin/com/timife/kotlinbackend/configs/ApplicationConfig.kt
     }
 
     @Bean
@@ -33,7 +58,7 @@ class ApplicationConfig {
     }
 
     @Bean
-    private fun passwordEncoder(): PasswordEncoder {
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
