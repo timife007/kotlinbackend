@@ -11,16 +11,13 @@ import org.springframework.data.annotation.Id
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.UUID
 
-@Builder
 @Entity
 @Table(name = "_users")
-@NoArgsConstructor
-@AllArgsConstructor
 data class User(
     @Id
-    @Generated
-    val id: Int,
+    val id: UUID,
     val firstName: String,
     val lastName: String,
     val email: String,
