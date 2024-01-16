@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-@RequiredArgsConstructor
 class AuthServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -29,7 +28,7 @@ class AuthServiceImpl(
             firstName = request.firstName,
             lastName = request.lastName,
             email = request.email,
-            password = request.password,
+            password = passwordEncoder.encode(request.password),
             role = Role.ADMIN
         )
         return if (userRepository.findByEmail(user.email) == null) {
@@ -44,7 +43,7 @@ class AuthServiceImpl(
         authManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 authRequest.email,
-                authRequest.password
+                passwordEncoder.encode(authRequest.password)
             )
         )
         val user = userRepository.findByEmail(authRequest.email)
