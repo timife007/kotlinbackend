@@ -8,7 +8,6 @@ import com.timife.kotlinbackend.domain.response.AuthResponse
 import com.timife.kotlinbackend.domain.response.UserResponse
 import com.timife.kotlinbackend.repositories.UserRepository
 import com.timife.kotlinbackend.security.JwtService
-import lombok.RequiredArgsConstructor
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
