@@ -1,4 +1,4 @@
-package com.timife.kotlinbackend.controllers
+package com.timife.kotlinbackend.services
 
 import com.timife.kotlinbackend.domain.requests.AuthRequest
 import com.timife.kotlinbackend.domain.requests.UserRequest

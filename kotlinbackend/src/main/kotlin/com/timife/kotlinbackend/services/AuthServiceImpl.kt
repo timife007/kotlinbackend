@@ -1,4 +1,4 @@
-package com.timife.kotlinbackend.controllers
+package com.timife.kotlinbackend.services
 
 import com.timife.kotlinbackend.domain.Role
 import com.timife.kotlinbackend.domain.User
@@ -29,8 +29,8 @@ class AuthServiceImpl(
             firstName = request.firstName,
             lastName = request.lastName,
             email = request.email,
-            password = request.password,
-            role = Role.ADMIN
+            password = passwordEncoder.encode(request.password),
+            role = Role.USER
         )
         return if (userRepository.findByEmail(user.email) == null) {
             userRepository.save(user)
