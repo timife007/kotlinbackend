@@ -10,19 +10,20 @@ import com.timife.kotlinbackend.repositories.UserRepository
 import com.timife.kotlinbackend.security.JwtService
 import lombok.RequiredArgsConstructor
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 @RequiredArgsConstructor
-class AuthenticationService(
+class AuthServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtService: JwtService,
     private val authManager: AuthenticationManager
-) {
-    fun register(request: UserRequest): UserResponse? {
+) : AuthService {
+    override fun register(request: UserRequest): UserResponse? {
         val user = User(
             id = UUID.randomUUID(),
             firstName = request.firstName,
@@ -31,16 +32,29 @@ class AuthenticationService(
             password = request.password,
             role = Role.ADMIN
         )
-        return if(userRepository.findByEmail(user.email) == null){
+        return if (userRepository.findByEmail(user.email) == null) {
             userRepository.save(user)
             UserResponse(email = user.email, isSuccessful = true)
-        }else{
+        } else {
             null
         }
     }
 
-    fun login(authRequest: AuthRequest): AuthResponse {
-        return AuthResponse("")
+    override fun authenticate(authRequest: AuthRequest): AuthResponse? {
+        authManager.authenticate(
+            UsernamePasswordAuthenticationToken(
+                authRequest.email,
+                authRequest.password
+            )
+        )
+        val user = userRepository.findByEmail(authRequest.email)
+        val accessToken = user?.let {
+            jwtService.generateToken(it)
+        }
+        return if (accessToken != null) {
+            AuthResponse(accessToken)
+        } else {
+            null
+        }
     }
-
 }
