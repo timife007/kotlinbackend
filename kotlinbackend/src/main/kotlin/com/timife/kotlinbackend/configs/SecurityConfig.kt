@@ -1,5 +1,6 @@
-package com.timife.kotlinbackend.security
+package com.timife.kotlinbackend.configs
 
+import com.timife.kotlinbackend.security.JwtAuthenticationFilter
 import lombok.RequiredArgsConstructor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

@@ -11,21 +11,22 @@ import com.timife.kotlinbackend.security.JwtService
 import lombok.RequiredArgsConstructor
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-@RequiredArgsConstructor
 class AuthServiceImpl(
-    private val userRepository: UserRepository,
+    private val userDetailService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
     private val jwtService: JwtService,
-    private val authManager: AuthenticationManager
+    private val authManager: AuthenticationManager,
+    private val userRepository: UserRepository
 ) : AuthService {
     override fun register(request: UserRequest): UserResponse? {
         val user = User(
-            id = UUID.randomUUID(),
+            id = 1,
             firstName = request.firstName,
             lastName = request.lastName,
             email = request.email,
@@ -47,7 +48,7 @@ class AuthServiceImpl(
                 authRequest.password
             )
         )
-        val user = userRepository.findByEmail(authRequest.email)
+        val user = userDetailService.loadUserByUsername(authRequest.email)
         val accessToken = user?.let {
             jwtService.generateToken(it)
         }
