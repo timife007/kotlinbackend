@@ -1,7 +1,6 @@
 package com.timife.kotlinbackend.services
 
 import com.timife.kotlinbackend.domain.Role
-import com.timife.kotlinbackend.domain.User
 import com.timife.kotlinbackend.domain.requests.AuthRequest
 import com.timife.kotlinbackend.domain.requests.UserRequest
 import com.timife.kotlinbackend.domain.response.AuthResponse
@@ -11,6 +10,7 @@ import com.timife.kotlinbackend.security.JwtService
 import lombok.RequiredArgsConstructor
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -25,8 +25,8 @@ class AuthServiceImpl(
     private val userRepository: UserRepository
 ) : AuthService {
     override fun register(request: UserRequest): UserResponse? {
-        val user = User(
-            id = 1,
+        val user = com.timife.kotlinbackend.domain.User(
+            id = UUID.randomUUID(),
             firstName = request.firstName,
             lastName = request.lastName,
             email = request.email,
