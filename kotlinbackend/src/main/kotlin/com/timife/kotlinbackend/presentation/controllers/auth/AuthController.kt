@@ -7,6 +7,7 @@ import com.timife.kotlinbackend.domain.requests.UserRequest
 import com.timife.kotlinbackend.domain.response.AuthResponse
 import com.timife.kotlinbackend.domain.response.UserResponse
 import com.timife.kotlinbackend.services.AuthService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,12 +21,13 @@ import java.util.*
 class AuthController(private val authService: AuthService) {
 
     @PostMapping("/user/signup")
-    fun register(userRequest: UserRequest): ResponseEntity<UserResponse> {
-        return ResponseEntity.ok(authService.register(userRequest.toUserModel()))
+    fun register(@RequestBody userRequest: UserRequest): ResponseEntity<UserResponse> {
+        val userEntity = authService.register(userRequest.toUserModel())
+        return ResponseEntity(userEntity, HttpStatus.CREATED)
     }
 
     @PostMapping("/admin/signup")
-    fun registerAdmin(userRequest: UserRequest): ResponseEntity<UserResponse> {
+    fun registerAdmin(@RequestBody userRequest: UserRequest): ResponseEntity<UserResponse> {
         return ResponseEntity.ok(authService.register(userRequest.toAdminUser()))
     }
 

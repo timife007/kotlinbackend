@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
-@Service
 class AuthServiceImpl(
     private val userDetailService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
