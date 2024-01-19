@@ -1,9 +1,11 @@
 package com.timife.kotlinbackend.configs
 
+import com.timife.kotlinbackend.domain.Role
 import com.timife.kotlinbackend.security.JwtAuthenticationFilter
 import lombok.RequiredArgsConstructor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -23,8 +25,10 @@ class SecurityConfig(
         http
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers("/api/auth/**")
+                it.requestMatchers("/api/login","/api/admin/signup")
                     .permitAll()
+                    .requestMatchers(HttpMethod.POST,"/api/user/register")
+                    .hasRole(Role.ADMIN.name)
                     .anyRequest()
                     .authenticated()
             }.sessionManagement {
