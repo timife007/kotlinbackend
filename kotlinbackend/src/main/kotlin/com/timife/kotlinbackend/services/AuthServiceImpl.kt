@@ -1,21 +1,18 @@
 package com.timife.kotlinbackend.services
 
-import com.timife.kotlinbackend.domain.Role
 import com.timife.kotlinbackend.domain.User
 import com.timife.kotlinbackend.domain.requests.AuthRequest
-import com.timife.kotlinbackend.domain.requests.UserRequest
 import com.timife.kotlinbackend.domain.response.AuthResponse
 import com.timife.kotlinbackend.domain.response.UserResponse
 import com.timife.kotlinbackend.repositories.UserRepository
 import com.timife.kotlinbackend.security.JwtService
-import lombok.RequiredArgsConstructor
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.*
 
+@Service
 class AuthServiceImpl(
     private val userDetailService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
@@ -23,13 +20,13 @@ class AuthServiceImpl(
     private val authManager: AuthenticationManager,
     private val userRepository: UserRepository
 ) : AuthService {
-    override fun register(user: User): UserResponse? {
-        val updatedUser = user.copy(password = passwordEncoder.encode(user.password))
+    override fun register(request: User): UserResponse? {
+        val updatedUser = request.copy(password = passwordEncoder.encode(request.password))
         return if (userRepository.findByEmail(updatedUser.email) == null) {
             userRepository.save(updatedUser)
-            UserResponse(email = user.email, isSuccessful = true)
+            UserResponse(email = request.email, isSuccessful = true, "User successfully registered")
         } else {
-            null
+            UserResponse(email = request.email, isSuccessful = false, "User already registered")
         }
     }
 

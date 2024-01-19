@@ -21,7 +21,7 @@ import java.util.*
 class AuthController(private val authService: AuthService) {
 
     @PostMapping("/user/signup")
-    fun register(@RequestBody userRequest: UserRequest): ResponseEntity<UserResponse> {
+    fun addUser(@RequestBody userRequest: UserRequest): ResponseEntity<Any> {
         val userEntity = authService.register(userRequest.toUserModel())
         return ResponseEntity(userEntity, HttpStatus.CREATED)
     }
@@ -32,8 +32,14 @@ class AuthController(private val authService: AuthService) {
     }
 
     @PostMapping("/login")
-    fun logIn(@RequestBody authRequest: AuthRequest): ResponseEntity<AuthResponse> {
-        return ResponseEntity.ok(authService.authenticate(authRequest))
+    fun logIn(@RequestBody authRequest: AuthRequest): ResponseEntity<Any> {
+        return try {
+            ResponseEntity.ok(authService.authenticate(authRequest))
+        }catch (e: Exception){
+
+            val error  = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = e.localizedMessage,null)
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error)
+        }
     }
 
     private fun UserRequest.toUserModel(): User {
@@ -58,3 +64,9 @@ class AuthController(private val authService: AuthService) {
         )
     }
 }
+
+data class  ErrorResponse(
+    val status: HttpStatus,
+    val message: String,
+    val errorDetails: String?
+)

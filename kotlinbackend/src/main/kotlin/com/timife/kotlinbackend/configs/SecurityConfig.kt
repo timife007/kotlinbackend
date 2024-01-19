@@ -32,7 +32,6 @@ class SecurityConfig(
             }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-
         return http.build()
     }
 
