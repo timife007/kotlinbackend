@@ -4,6 +4,10 @@ import com.timife.kotlinbackend.repositories.UserRepository
 import com.timife.kotlinbackend.security.JwtService
 import com.timife.kotlinbackend.services.AuthService
 import com.timife.kotlinbackend.services.AuthServiceImpl
+//import com.timife.kotlinbackend.services.AuthServiceImpl
+//import com.timife.kotlinbackend.security.JwtService
+//import com.timife.kotlinbackend.services.AuthService
+//import com.timife.kotlinbackend.services.AuthServiceImpl
 import com.timife.kotlinbackend.services.CustomUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.context.annotation.Bean
@@ -23,36 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class ApplicationConfig {
 
     @Bean
-    fun userDetailsService(userRepository: UserRepository): UserDetailsService {
-<<<<<<< HEAD:kotlinbackend/src/main/kotlin/com/timife/kotlinbackend/security/ApplicationConfig.kt
-        return UserDetailsService { username ->
-            userRepository.findByEmail(username) ?: throw UsernameNotFoundException("User not found")
-        }
-=======
-        return CustomUserDetailsService(userRepository)
-    }
-
-    @Bean
-    fun getAuthService(
-        userRepository: UserRepository,
-        userDetailsService: UserDetailsService,
-        jwtService: JwtService,
-        authenticationManager: AuthenticationManager
-    ): AuthService {
-        return AuthServiceImpl(
-            userDetailService = userDetailsService,
-            passwordEncoder = passwordEncoder(),
-            jwtService = jwtService,
-            authManager = authenticationManager,
-            userRepository = userRepository
-        )
->>>>>>> 866238509897fcb443086dd144212bba4e4425f5:kotlinbackend/src/main/kotlin/com/timife/kotlinbackend/configs/ApplicationConfig.kt
-    }
-
-    @Bean
     fun authenticationProvider(userRepository: UserRepository): AuthenticationProvider {
         val authProvider = DaoAuthenticationProvider()
-        authProvider.setUserDetailsService(userDetailsService(userRepository))
+        authProvider.setUserDetailsService(CustomUserDetailsService(userRepository))
         authProvider.setPasswordEncoder(passwordEncoder())
         return authProvider
     }

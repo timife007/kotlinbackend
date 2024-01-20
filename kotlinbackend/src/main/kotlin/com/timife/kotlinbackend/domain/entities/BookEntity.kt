@@ -1,12 +1,12 @@
 package com.timife.kotlinbackend.domain.entities
 
-import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
 import jakarta.persistence.Table
 import lombok.AllArgsConstructor
 import lombok.Builder
 import lombok.NoArgsConstructor
-import org.springframework.data.annotation.Id
 
 @Builder
 @Entity
@@ -14,8 +14,9 @@ import org.springframework.data.annotation.Id
 @NoArgsConstructor
 @AllArgsConstructor
 data class BookEntity(
-    @EmbeddedId
-    val isbn: String,
+    @Id
+    @GeneratedValue
+    val isbn: Long,
     val title: String,
     val author: String
 )

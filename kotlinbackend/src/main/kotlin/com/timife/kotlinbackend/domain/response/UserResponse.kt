@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor
 
 data class UserResponse(
     val email:String,
-    val isSuccessful: Boolean
+    val isSuccessful: Boolean,
+    val message: String
 )
