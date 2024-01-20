@@ -7,7 +7,5 @@ import com.timife.kotlinbackend.domain.response.AuthResponse
 import com.timife.kotlinbackend.domain.response.UserResponse
 
 interface AuthService {
-    fun register(request: User): UserResponse?
-
     fun authenticate(authRequest: AuthRequest): AuthResponse?
 }
