@@ -23,7 +23,7 @@ class AuthServiceImpl(
         authManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 authRequest.email,
-                passwordEncoder.encode(authRequest.password)
+                authRequest.password
             )
         )
         val user = userDetailService.loadUserByUsername(authRequest.email)

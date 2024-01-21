@@ -1,5 +1,6 @@
 package com.timife.kotlinbackend.services.impl
 
+import com.timife.kotlinbackend.domain.Role
 import com.timife.kotlinbackend.domain.User
 import com.timife.kotlinbackend.domain.response.UserResponse
 import com.timife.kotlinbackend.repositories.UserRepository
@@ -24,7 +25,7 @@ class UserServiceImpl(
 
     override fun getAllUsers(): List<UserResponse> {
         val users = userRepository.findAll().toList()
-        return users.map {
+        return users.filter { it.role == Role.USER }.map {
             UserResponse(it.id, it.email, true)
         }
     }
