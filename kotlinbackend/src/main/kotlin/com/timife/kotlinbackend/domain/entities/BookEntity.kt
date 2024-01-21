@@ -8,13 +8,14 @@ import lombok.AllArgsConstructor
 import lombok.Builder
 import lombok.NoArgsConstructor
 import java.util.Date
+import java.util.UUID
 
 @Entity
 @Table(name = "books")
 data class BookEntity(
     @Id
     @GeneratedValue
-    val id: Int,
+    val id: UUID,
     val isbn: Long,
     val title: String,
     val author: String,
