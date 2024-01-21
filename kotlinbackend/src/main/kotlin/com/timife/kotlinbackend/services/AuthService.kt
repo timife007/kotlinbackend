@@ -8,4 +8,6 @@ import com.timife.kotlinbackend.domain.response.UserResponse
 
 interface AuthService {
     fun authenticate(authRequest: AuthRequest): AuthResponse?
+
+    fun logout()
 }

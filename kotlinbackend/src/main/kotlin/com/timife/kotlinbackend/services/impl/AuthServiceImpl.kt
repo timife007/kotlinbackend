@@ -36,4 +36,8 @@ class AuthServiceImpl(
             null
         }
     }
+
+    override fun logout() {
+        
+    }
 }

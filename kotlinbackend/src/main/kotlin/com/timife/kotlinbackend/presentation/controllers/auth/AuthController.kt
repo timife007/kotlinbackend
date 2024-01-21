@@ -38,5 +38,10 @@ class AuthController(
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error)
         }
     }
+
+    @PostMapping("/logout")
+    fun logOut(){
+        //TODO: logout feature
+    }
 }
 
