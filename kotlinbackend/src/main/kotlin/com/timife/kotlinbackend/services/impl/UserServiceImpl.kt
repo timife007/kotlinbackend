@@ -29,6 +29,4 @@ class UserServiceImpl(
             UserResponse(it.id, it.email, true)
         }
     }
-
-
 }
