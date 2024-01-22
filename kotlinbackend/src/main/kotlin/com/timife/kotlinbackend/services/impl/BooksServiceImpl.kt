@@ -19,6 +19,10 @@ class BooksServiceImpl (
         TODO("Not yet implemented")
     }
 
+    override fun updateBook(bookEntity: BookEntity): BookEntity {
+        TODO("Not yet implemented")
+    }
+
     override fun viewBook(isBn: String): BookEntity {
         TODO("Not yet implemented")
     }

@@ -8,6 +8,8 @@ interface BooksService {
 
     fun createBook(bookEntity: BookEntity): BookEntity
 
+    fun updateBook(bookEntity: BookEntity): BookEntity
+
     fun viewBook(isBn: String): BookEntity
 
     fun getCheckedOutBooks(): List<CheckedOutBook>
