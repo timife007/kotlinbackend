@@ -14,4 +14,6 @@ interface BooksRepository : CrudRepository<BookEntity, UUID>, PagingAndSortingRe
 
     fun findOneByIsbnIgnoreCase(isbn: String): BookEntity
 
+    fun findAllByIsIssuedFalse(): MutableIterable<BookEntity>
+
 }

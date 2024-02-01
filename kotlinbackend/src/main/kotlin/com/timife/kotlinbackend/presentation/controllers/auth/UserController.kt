@@ -15,13 +15,22 @@ import org.springframework.web.bind.annotation.*
 class UserController(private val userService: UserService) {
     @PostMapping("/register")
     fun addUser(@RequestBody userRequest: UserRequest): ResponseEntity<Any> {
+        val error = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = "Error authenticating user", null)
+
+        if (!userRequest.email.isValidEmail()) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(error.copy(message = "Please enter a valid email address"))
+        } else if (userRequest.password.length < 6) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(error.copy(message = "Password must have at lease 6 characters"))
+        }
         return try {
             ResponseEntity.ok(userService.createUser(userRequest.toUserModel()))
-        } catch (e: BadCredentialsException){
+        } catch (e: BadCredentialsException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
-        }catch (e: CredentialsExpiredException){
+        } catch (e: CredentialsExpiredException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
         }
     }

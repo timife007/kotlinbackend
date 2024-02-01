@@ -8,6 +8,7 @@ import com.timife.kotlinbackend.presentation.utils.toAdminUser
 import com.timife.kotlinbackend.presentation.utils.toUserModel
 import com.timife.kotlinbackend.services.AuthService
 import com.timife.kotlinbackend.services.UserService
+import io.jsonwebtoken.security.Password
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.swing.text.StyledEditorKit.BoldAction
 
 
 @RestController
@@ -24,19 +26,19 @@ class AuthController(
     private val authService: AuthService,
     private val userService: UserService
 ) {
+    val error = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = "Error authenticating user",null)
 
     //Registration for Admin Users
     @PostMapping("/admin/signup")
-
     fun registerAdmin(@RequestBody userRequest: UserRequest): ResponseEntity<Any> {
-        val error = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = "Password must be with at least 6 characters",null)
 
-        if(userRequest.password.length < 6) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Password must have at lease 6 characters"))
-        }
+
         if(!userRequest.email.isValidEmail()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Please enter a valid email address"))
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Please enter a valid email address"))
+        }else if(userRequest.password.length < 6) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Password must have at lease 6 characters"))
         }
+
         return try {
             ResponseEntity.ok(userService.createUser(userRequest.toAdminUser()))
         } catch (e: Exception) {
@@ -70,4 +72,3 @@ class AuthController(
 fun String.isValidEmail(): Boolean{
     return this.endsWith("gmail.com") || this.endsWith("yahoo.com")
 }
-

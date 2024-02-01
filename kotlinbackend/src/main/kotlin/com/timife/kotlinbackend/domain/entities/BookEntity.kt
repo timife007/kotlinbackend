@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import lombok.AllArgsConstructor
 import lombok.Builder
 import lombok.NoArgsConstructor
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression.DateTime
 import java.util.Date
 import java.util.UUID
 
@@ -16,7 +17,7 @@ data class BookEntity(
     val isbn: String,
     val title: String,
     val author: String,
-    val issueDate: Date? = null,
+    val issueDate: String,
     val isIssued: Boolean = false
 )
 
