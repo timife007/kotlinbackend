@@ -7,7 +7,7 @@ import java.util.*
 
 fun UserRequest.toUserModel(): User {
     return User(
-        id = UUID.randomUUID(),
+        id = null,
         firstName = this.firstName,
         lastName = this.lastName,
         email = this.email,
@@ -18,7 +18,7 @@ fun UserRequest.toUserModel(): User {
 
 fun UserRequest.toAdminUser(): User {
     return User(
-        id = UUID.randomUUID(),
+        id = null,
         firstName = this.firstName,
         lastName = this.lastName,
         email = this.email,

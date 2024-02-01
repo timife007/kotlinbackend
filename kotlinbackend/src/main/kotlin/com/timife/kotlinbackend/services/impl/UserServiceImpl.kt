@@ -15,6 +15,7 @@ class UserServiceImpl(
 ) : UserService {
     override fun createUser(user: User): UserResponse? {
         val updatedUser = user.copy(password = passwordEncoder.encode(user.password))
+        if(user.password.length < 6) throw  IllegalArgumentException()
         return if (userRepository.findByEmail(updatedUser.email) == null) {
             userRepository.save(updatedUser)
             UserResponse(id = user.id, email = user.email, isSuccessful = true, "User successfully registered")
@@ -25,7 +26,7 @@ class UserServiceImpl(
 
     override fun getAllUsers(): List<UserResponse> {
         val users = userRepository.findAll().toList()
-        return users.filter { it.role == Role.USER }.map {
+        return users.map {
             UserResponse(it.id, it.email, true)
         }
     }

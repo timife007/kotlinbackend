@@ -1,11 +1,12 @@
 package com.timife.kotlinbackend.domain.entities
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "checked_out")
 data class CheckedOutBook(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
     val isbn: String,
     val author: String,

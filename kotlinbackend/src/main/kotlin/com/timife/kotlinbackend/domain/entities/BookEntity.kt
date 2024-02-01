@@ -1,9 +1,6 @@
 package com.timife.kotlinbackend.domain.entities
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import lombok.AllArgsConstructor
 import lombok.Builder
 import lombok.NoArgsConstructor
@@ -14,9 +11,9 @@ import java.util.UUID
 @Table(name = "books")
 data class BookEntity(
     @Id
-    @GeneratedValue
-    val id: UUID,
-    val isbn: Long,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long,
+    val isbn: String,
     val title: String,
     val author: String,
     val issueDate: Date? = null,

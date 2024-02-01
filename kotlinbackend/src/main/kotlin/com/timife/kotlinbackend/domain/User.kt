@@ -14,8 +14,8 @@ import java.util.UUID
 @Table(name = "_users")
 data class User(
     @Id
-    @GeneratedValue
-    val id: UUID,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
     val firstName: String,
     val lastName: String,
     val email: String,

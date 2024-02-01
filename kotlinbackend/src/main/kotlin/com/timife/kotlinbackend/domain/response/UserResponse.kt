@@ -8,7 +8,7 @@ import java.util.UUID
 
 
 data class UserResponse(
-    val id: UUID,
+    val id: Long?,
     val email: String,
     val isSuccessful: Boolean,
     val message: String? = null

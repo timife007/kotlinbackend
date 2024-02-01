@@ -6,6 +6,8 @@ import com.timife.kotlinbackend.presentation.utils.toUserModel
 import com.timife.kotlinbackend.services.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,9 +17,12 @@ class UserController(private val userService: UserService) {
     fun addUser(@RequestBody userRequest: UserRequest): ResponseEntity<Any> {
         return try {
             ResponseEntity.ok(userService.createUser(userRequest.toUserModel()))
-        } catch (e: Exception) {
-            val error = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = e.localizedMessage, null)
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error)
+        } catch (e: BadCredentialsException){
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
+        }catch (e: CredentialsExpiredException){
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+        }catch (e: Exception){
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
         }
     }
 

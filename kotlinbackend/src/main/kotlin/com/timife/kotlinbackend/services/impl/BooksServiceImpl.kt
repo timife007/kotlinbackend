@@ -12,7 +12,7 @@ class BooksServiceImpl (
 ): BooksService {
 
     override fun getAllBooks(): List<BookEntity> {
-        TODO("Not yet implemented")
+        return bookRepository.findAll().toList()
     }
 
     override fun createBook(bookEntity: BookEntity): BookEntity {

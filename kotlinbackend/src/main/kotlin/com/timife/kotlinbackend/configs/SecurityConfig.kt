@@ -34,14 +34,6 @@ class SecurityConfig(
                     .authenticated()
             }.sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }.logout { logout ->
-                logout.logoutUrl("/api/logout").addLogoutHandler { request, response, authentication ->
-                    try {
-                        request.logout()
-                    } catch (e: ServletException){
-                        //TOD:
-                    }
-                }
             }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
