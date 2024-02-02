@@ -3,8 +3,11 @@ package com.timife.kotlinbackend.presentation.utils
 import com.timife.kotlinbackend.domain.Role
 import com.timife.kotlinbackend.domain.User
 import com.timife.kotlinbackend.domain.dtos.BookDto
+import com.timife.kotlinbackend.domain.dtos.IssueDto
 import com.timife.kotlinbackend.domain.entities.BookEntity
+import com.timife.kotlinbackend.domain.entities.IssueEntity
 import com.timife.kotlinbackend.domain.requests.UserRequest
+import java.time.LocalDateTime
 import java.util.*
 
 fun UserRequest.toUserModel(): User {
@@ -35,8 +38,8 @@ fun BookEntity.toBookDto(): BookDto {
         title = this.title,
         author = this.author,
         isbn = this.isbn,
-        dateIssued = this.issueDate,
-        id = this.id
+        quantity = this.quantity,
+        edition = this.edition
     )
 }
 
@@ -44,9 +47,27 @@ fun BookDto.toBookEntity(): BookEntity {
     return BookEntity(
         title = this.title,
         author = this.author,
-        issueDate = dateIssued,
-        isIssued = false,
         isbn = this.isbn,
-        id = this.id
+        edition = this.edition,
+        quantity = this.quantity
     )
 }
+
+
+fun BookEntity.toIssueEntity(): IssueEntity{
+    return IssueEntity(
+        title = this.title,
+        isbn = this.isbn,
+        author = this.author,
+        issueDate = LocalDateTime.now()
+    )
+}
+
+//fun IssueDto.toIssueEntity():IssueEntity{
+//    return IssueEntity(
+//        id = null,
+//        issueDate = LocalDateTime.now(),
+//        isbn = this.isbn,
+//        author = this
+//    )
+//}

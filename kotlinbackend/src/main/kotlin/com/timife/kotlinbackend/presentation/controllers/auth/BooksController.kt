@@ -1,6 +1,8 @@
 package com.timife.kotlinbackend.presentation.controllers.auth
 
 import com.timife.kotlinbackend.domain.dtos.BookDto
+import com.timife.kotlinbackend.domain.dtos.IssueDto
+import com.timife.kotlinbackend.domain.entities.IssueEntity
 import com.timife.kotlinbackend.domain.response.ErrorResponse
 import com.timife.kotlinbackend.presentation.utils.toBookDto
 import com.timife.kotlinbackend.presentation.utils.toBookEntity
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/books")
@@ -32,7 +35,7 @@ class BooksController(
     }
 
     @PostMapping
-    fun createBook(@RequestBody book: BookDto){
+    fun createBook(@RequestBody book: BookDto) {
 
     }
 
@@ -40,15 +43,15 @@ class BooksController(
     fun updateBook(@PathVariable isbn: String, @RequestBody bookDto: BookDto) {
         return try {
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
 
         }
     }
 
     @GetMapping("/issued")
-    fun viewIssuedBooks(): ResponseEntity<Any> {
+    fun viewIssues(): ResponseEntity<Any> {
         return try {
-            ResponseEntity.ok(booksService.getIssuedBooks())
+            ResponseEntity.ok(booksService.getIssues())
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.localizedMessage)
         }
@@ -56,18 +59,22 @@ class BooksController(
 
     @PutMapping("/issue/{isbn}")
     fun issueBook(
-        @PathVariable isbn: String
+        @PathVariable isbn: String,
+        @RequestBody issueDto: IssueDto
     ): ResponseEntity<Any> {
-        val unIssuedBook = booksService.getUnissuedBook(isbn)
-        val isPresent = booksService.bookExists(isbn)
-        val issuedBook = booksService.updateBook(
-            unIssuedBook.copy(isIssued = true)
+        val book = booksService.viewBook(isbn)
+        val issueEntity = IssueEntity(
+            title = book.title,
+            author = book.author,
+            isbn = issueDto.isbn,
+            person = issueDto.person,
+            issueDate = LocalDateTime.now()
         )
-
-        return if (isPresent) {
-            ResponseEntity.ok(issuedBook)
-        } else {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(HttpStatus.CREATED, "Error issuing book"))
+        return try {
+            ResponseEntity.ok(issueEntity)
+        } catch (e: Exception) {
+            val error = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = e.localizedMessage, null)
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error)
         }
     }
 }

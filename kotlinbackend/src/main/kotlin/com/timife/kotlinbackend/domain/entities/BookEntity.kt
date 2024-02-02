@@ -12,14 +12,9 @@ import java.util.UUID
 @Table(name = "books")
 data class BookEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
     val isbn: String,
     val title: String,
+    val quantity: Int,
+    val edition: String,
     val author: String,
-    val issueDate: String,
-    val isIssued: Boolean = false
 )
-
-//NOTE: So, each item even with similar isbn can have different ids to differentiate them
-//when borrowing and should have an issue date.

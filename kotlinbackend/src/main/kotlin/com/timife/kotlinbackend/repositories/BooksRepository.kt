@@ -9,11 +9,11 @@ import java.awt.print.Book
 import java.util.UUID
 
 @Repository
-interface BooksRepository : CrudRepository<BookEntity, UUID>, PagingAndSortingRepository<BookEntity, UUID> {
-    fun findAllByIsIssuedTrue(): MutableIterable<BookEntity>
+interface BooksRepository : CrudRepository<BookEntity, String>, PagingAndSortingRepository<BookEntity, String> {
+//    fun findAllByIsIssuedTrue(): MutableIterable<BookEntity>
 
-    fun findOneByIsbnIgnoreCase(isbn: String): BookEntity
+//    fun findOneByIsbnIgnoreCase(isbn: String): BookEntity
 
-    fun findAllByIsIssuedFalse(): MutableIterable<BookEntity>
+//    fun findAllByIsIssuedFalse(): MutableIterable<BookEntity>
 
 }

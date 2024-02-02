@@ -2,15 +2,21 @@ package com.timife.kotlinbackend.services.impl
 
 import com.timife.kotlinbackend.domain.entities.BookEntity
 import com.timife.kotlinbackend.domain.entities.CheckedOutBook
+import com.timife.kotlinbackend.domain.entities.IssueEntity
 import com.timife.kotlinbackend.repositories.BooksRepository
+import com.timife.kotlinbackend.repositories.IssueRepository
 import com.timife.kotlinbackend.services.BooksService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.util.*
+import java.util.stream.Collectors
+import java.util.stream.StreamSupport
 
 @Service
 class BooksServiceImpl(
-    private val bookRepository: BooksRepository
+    private val bookRepository: BooksRepository,
+    private val issueRepository: IssueRepository
 ) : BooksService {
 
     override fun getAllBooks(pageable: Pageable): Page<BookEntity> {
@@ -18,36 +24,44 @@ class BooksServiceImpl(
     }
 
     override fun createBook(bookEntity: BookEntity): BookEntity {
-        TODO("Not yet implemented")
+        if (bookRepository.existsById(bookEntity.isbn)) {
+            val book = bookRepository.findById(bookEntity.isbn).orElseThrow()
+            bookRepository.save(book.copy(quantity = book.quantity + 1))
+        }
+        return bookRepository.save(bookEntity)
     }
 
-    override fun updateBook(bookEntity: BookEntity): BookEntity {
-        TODO("Not yet implemented")
+    override fun updateBook(isbn: String, bookEntity: BookEntity): Optional<BookEntity> {
+        return bookRepository.findById(isbn).map { book ->
+            bookRepository.save(book)
+        } ?: throw IllegalArgumentException()
     }
 
     override fun viewBook(isBn: String): BookEntity {
-        TODO("Not yet implemented")
+        return bookRepository.findById(isBn).orElseThrow()
     }
 
     override fun getCheckedOutBooks(): List<CheckedOutBook> {
         TODO("Not yet implemented")
     }
 
-    override fun getIssuedBooks(): List<BookEntity> {
-        TODO("Not yet implemented")
+    override fun getIssues(): List<IssueEntity> {
+        return StreamSupport.stream(issueRepository.findAll().spliterator(), false).collect(Collectors.toList())
     }
 
-    override fun issueBook(isBn: String): BookEntity {
-        TODO("Not yet implemented")
+    override fun issueBook(isBn: String, issueEntity: IssueEntity): IssueEntity {
+        bookRepository.findById(isBn).map { book ->
+            val existingBook = book.copy(quantity = book.quantity - 1)
+            bookRepository.save(existingBook)
+        }
+        return issueRepository.save(issueEntity)
     }
 
     override fun bookExists(isbn: String): Boolean {
-        return bookRepository.findAll().any {
-            it.isbn == isbn
-        }
+        return bookRepository.existsById(isbn)
     }
 
-    override fun getUnissuedBook(isBn: String): BookEntity {
-        TODO("Not yet implemented")
+    override fun deleteBook(isbn: String) {
+        bookRepository.deleteById(isbn)
     }
 }
