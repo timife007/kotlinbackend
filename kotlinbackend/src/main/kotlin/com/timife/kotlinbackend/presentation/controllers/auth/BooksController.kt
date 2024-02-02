@@ -35,8 +35,15 @@ class BooksController(
     }
 
     @PostMapping
-    fun createBook(@RequestBody book: BookDto) {
-
+    fun createBook(@RequestBody book: BookDto): ResponseEntity<Any> {
+        val bookEntity = book.toBookEntity()
+        val bookSaved = booksService.createBook(bookEntity)
+        val savedBookDto = bookSaved.toBookDto()
+        return try {
+            ResponseEntity.ok(savedBookDto)
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.CREATED).body(e.localizedMessage)
+        }
     }
 
     @PutMapping("/update/{isbn}")

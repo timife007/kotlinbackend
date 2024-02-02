@@ -26,7 +26,7 @@ class BooksServiceImpl(
     override fun createBook(bookEntity: BookEntity): BookEntity {
         if (bookRepository.existsById(bookEntity.isbn)) {
             val book = bookRepository.findById(bookEntity.isbn).orElseThrow()
-            bookRepository.save(book.copy(quantity = book.quantity + 1))
+            return bookRepository.save(book.copy(quantity = book.quantity + 1))
         }
         return bookRepository.save(bookEntity)
     }
