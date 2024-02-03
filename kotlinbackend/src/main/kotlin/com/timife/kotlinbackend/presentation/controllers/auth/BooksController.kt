@@ -8,20 +8,10 @@ import com.timife.kotlinbackend.domain.response.ErrorResponse
 import com.timife.kotlinbackend.presentation.utils.toBookDto
 import com.timife.kotlinbackend.presentation.utils.toBookEntity
 import com.timife.kotlinbackend.services.BooksService
-import org.apache.coyote.Response
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
@@ -119,6 +109,19 @@ class BooksController(
             ResponseEntity.ok(ClearResponse("Issues db successfully cleared"))
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.localizedMessage)
+        }
+    }
+
+    @DeleteMapping("/{isbn}")
+    fun deleteBook(@PathVariable("isbn") isbn: String): ResponseEntity<Any> {
+        if (!booksService.bookExists(isbn)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ClearResponse("Book not found"))
+        }
+        return try {
+            booksService.deleteBook(isbn)
+            ResponseEntity.ok(ClearResponse("Book successfully deleted"))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ClearResponse(message = e.localizedMessage))
         }
     }
 
