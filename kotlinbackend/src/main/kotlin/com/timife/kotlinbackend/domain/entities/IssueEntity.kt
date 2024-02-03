@@ -13,7 +13,7 @@ import java.util.*
 data class IssueEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: String? = null,
+    val id: Long?,
     val isbn: String,
     val title: String,
     val issueDate: LocalDateTime,

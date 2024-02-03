@@ -34,9 +34,9 @@ class AuthController(
 
 
         if(!userRequest.email.isValidEmail()){
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Please enter a valid email address"))
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Please enter a valid email address"))
         }else if(userRequest.password.length < 6) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Password must have at lease 6 characters"))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error.copy(message = "Password must have at lease 6 characters"))
         }
 
         return try {

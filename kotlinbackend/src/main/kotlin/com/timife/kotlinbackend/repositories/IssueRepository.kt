@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface IssueRepository : CrudRepository<IssueEntity, String>{
+interface IssueRepository : CrudRepository<IssueEntity, Long>{
 
 }

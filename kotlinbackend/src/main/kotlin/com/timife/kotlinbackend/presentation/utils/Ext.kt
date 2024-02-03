@@ -59,7 +59,8 @@ fun BookEntity.toIssueEntity(): IssueEntity{
         title = this.title,
         isbn = this.isbn,
         author = this.author,
-        issueDate = LocalDateTime.now()
+        issueDate = LocalDateTime.now(),
+        id = null
     )
 }
 

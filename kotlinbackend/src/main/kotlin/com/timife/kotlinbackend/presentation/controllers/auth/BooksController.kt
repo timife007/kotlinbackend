@@ -28,10 +28,14 @@ class BooksController(
 ) {
 
     @GetMapping
-    fun getAllBooks(pageable: Pageable): ResponseEntity<Page<BookDto>> {
-        return ResponseEntity.ok(booksService.getAllBooks(pageable).map {
-            it.toBookDto()
-        })
+    fun getAllBooks(pageable: Pageable): ResponseEntity<Any> {
+        return try {
+            ResponseEntity.ok(booksService.getAllBooks(pageable).map {
+                it.toBookDto()
+            })
+        }catch (e:Exception){
+            ResponseEntity.status(HttpStatus.CREATED).body(e.localizedMessage)
+        }
     }
 
     @PostMapping
@@ -47,11 +51,13 @@ class BooksController(
     }
 
     @PutMapping("/update/{isbn}")
-    fun updateBook(@PathVariable isbn: String, @RequestBody bookDto: BookDto) {
+    fun updateBook(@PathVariable isbn: String, @RequestBody bookDto: BookDto): ResponseEntity<Any> {
+        val updateBook = booksService.updateBook(isbn, bookDto.toBookEntity()).orElseThrow()
+        val returnUpdatedBook = updateBook.toBookDto()
         return try {
-
+            ResponseEntity.ok(returnUpdatedBook)
         } catch (e: Exception) {
-
+            ResponseEntity.status(HttpStatus.CREATED).body(e.localizedMessage)
         }
     }
 
@@ -64,24 +70,40 @@ class BooksController(
         }
     }
 
-    @PutMapping("/issue/{isbn}")
+    @PostMapping("/issue/{isbn}")
     fun issueBook(
-        @PathVariable isbn: String,
+        @PathVariable("isbn") isbn: String,
         @RequestBody issueDto: IssueDto
     ): ResponseEntity<Any> {
         val book = booksService.viewBook(isbn)
+
         val issueEntity = IssueEntity(
+            id = null,
             title = book.title,
             author = book.author,
             isbn = issueDto.isbn,
             person = issueDto.person,
             issueDate = LocalDateTime.now()
         )
+        val issued = booksService.issueBook(isbn, issueEntity)
         return try {
-            ResponseEntity.ok(issueEntity)
+            ResponseEntity.ok(issued)
         } catch (e: Exception) {
             val error = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = e.localizedMessage, null)
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error)
         }
     }
+
+    @GetMapping("/{isbn}")
+    fun viewBook(
+        @PathVariable("isbn") isbn: String
+    ): ResponseEntity<Any> {
+        return try {
+            val book = booksService.viewBook(isbn)
+            ResponseEntity.ok(book.toBookDto())
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.localizedMessage)
+        }
+    }
+
 }

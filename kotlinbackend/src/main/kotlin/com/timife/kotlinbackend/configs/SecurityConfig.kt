@@ -28,7 +28,7 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.requestMatchers("/api/login", "/api/admin/signup")
                     .permitAll()
-                    .requestMatchers("/user")
+                    .requestMatchers("/user","/books/issued", "/books/issue/**")
                     .hasRole(Role.ADMIN.name)
                     .anyRequest()
                     .authenticated()
