@@ -1,9 +1,11 @@
 package com.timife.kotlinbackend.presentation.controllers.auth
 
 import com.timife.kotlinbackend.domain.requests.UserRequest
+import com.timife.kotlinbackend.domain.response.ClearResponse
 import com.timife.kotlinbackend.domain.response.ErrorResponse
 import com.timife.kotlinbackend.presentation.utils.toUserModel
 import com.timife.kotlinbackend.services.UserService
+import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
@@ -42,6 +44,29 @@ class UserController(private val userService: UserService) {
         } catch (e: Exception) {
             val error = ErrorResponse(status = HttpStatus.UNAUTHORIZED, message = e.localizedMessage, null)
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error)
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteUser(@PathVariable("id") id: Int): ResponseEntity<Any> {
+        if (!userService.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ClearResponse(message = "User not found"))
+        }
+        return try {
+            userService.deleteUser(id)
+            ResponseEntity.ok(ClearResponse(message = "User deleted successfully"))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.localizedMessage)
+        }
+    }
+
+    @DeleteMapping
+    fun deleteAllUsers(): ResponseEntity<Any> {
+        return try {
+            userService.clearUsers()
+            ResponseEntity.ok(ClearResponse(message = "users db successfully cleared"))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.localizedMessage)
         }
     }
 }

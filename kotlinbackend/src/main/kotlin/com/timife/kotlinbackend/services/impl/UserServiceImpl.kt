@@ -29,4 +29,16 @@ class UserServiceImpl(
             UserResponse(it.id, it.email, true)
         }
     }
+
+    override fun existsById(id: Int): Boolean {
+        return userRepository.existsById(id)
+    }
+
+    override fun clearUsers() {
+        userRepository.deleteAll()
+    }
+
+    override fun deleteUser(id: Int) {
+        userRepository.deleteById(id)
+    }
 }

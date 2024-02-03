@@ -3,14 +3,17 @@ package com.timife.kotlinbackend.presentation.controllers.auth
 import com.timife.kotlinbackend.domain.dtos.BookDto
 import com.timife.kotlinbackend.domain.dtos.IssueDto
 import com.timife.kotlinbackend.domain.entities.IssueEntity
+import com.timife.kotlinbackend.domain.response.ClearResponse
 import com.timife.kotlinbackend.domain.response.ErrorResponse
 import com.timife.kotlinbackend.presentation.utils.toBookDto
 import com.timife.kotlinbackend.presentation.utils.toBookEntity
 import com.timife.kotlinbackend.services.BooksService
+import org.apache.coyote.Response
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -33,7 +36,7 @@ class BooksController(
             ResponseEntity.ok(booksService.getAllBooks(pageable).map {
                 it.toBookDto()
             })
-        }catch (e:Exception){
+        } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.CREATED).body(e.localizedMessage)
         }
     }
@@ -63,8 +66,10 @@ class BooksController(
 
     @GetMapping("/issued")
     fun viewIssues(): ResponseEntity<Any> {
+        val issueEntity = booksService.getIssues()
+
         return try {
-            ResponseEntity.ok(booksService.getIssues())
+            ResponseEntity.ok(issueEntity)
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.localizedMessage)
         }
@@ -83,7 +88,8 @@ class BooksController(
             author = book.author,
             isbn = issueDto.isbn,
             person = issueDto.person,
-            issueDate = LocalDateTime.now()
+            issueDate = LocalDateTime.now(),
+            quantity = issueDto.quantity
         )
         val issued = booksService.issueBook(isbn, issueEntity)
         return try {
@@ -103,6 +109,26 @@ class BooksController(
             ResponseEntity.ok(book.toBookDto())
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.localizedMessage)
+        }
+    }
+
+    @DeleteMapping("/issues")
+    fun clearIssues(): ResponseEntity<Any> {
+        return try {
+            booksService.clearIssues()
+            ResponseEntity.ok(ClearResponse("Issues db successfully cleared"))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.localizedMessage)
+        }
+    }
+
+    @DeleteMapping
+    fun clearBooks(): ResponseEntity<Any> {
+        return try {
+            booksService.clearBooks()
+            ResponseEntity.ok(ClearResponse("Books db successfully cleared"))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.localizedMessage)
         }
     }
 

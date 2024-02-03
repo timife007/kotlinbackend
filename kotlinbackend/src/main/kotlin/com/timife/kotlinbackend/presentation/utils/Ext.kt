@@ -60,7 +60,8 @@ fun BookEntity.toIssueEntity(): IssueEntity{
         isbn = this.isbn,
         author = this.author,
         issueDate = LocalDateTime.now(),
-        id = null
+        id = null,
+        quantity = this.quantity
     )
 }
 

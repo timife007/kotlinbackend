@@ -24,4 +24,9 @@ interface BooksService {
     fun bookExists(isbn: String): Boolean
 
     fun deleteBook(isbn: String)
+
+    fun clearIssues()
+
+    fun clearBooks()
+
 }

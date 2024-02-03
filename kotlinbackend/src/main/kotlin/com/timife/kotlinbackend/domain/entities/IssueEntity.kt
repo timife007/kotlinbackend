@@ -18,5 +18,6 @@ data class IssueEntity(
     val title: String,
     val issueDate: LocalDateTime,
     val author:String,
-    val person: String? = null
+    val person: String? = null,
+    val quantity: Int
 )

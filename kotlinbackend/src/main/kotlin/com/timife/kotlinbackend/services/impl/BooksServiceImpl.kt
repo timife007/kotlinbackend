@@ -26,7 +26,7 @@ class BooksServiceImpl(
     override fun createBook(bookEntity: BookEntity): BookEntity {
         if (bookRepository.existsById(bookEntity.isbn)) {
             val book = bookRepository.findById(bookEntity.isbn).orElseThrow()
-            return bookRepository.save(book.copy(quantity = book.quantity + 1))
+            return bookRepository.save(book.copy(quantity = book.quantity + bookEntity.quantity)) //TODO: Increment by the quantity in the incoming book
         }
         return bookRepository.save(bookEntity)
     }
@@ -46,13 +46,16 @@ class BooksServiceImpl(
     }
 
     override fun getIssues(): List<IssueEntity> {
-        return StreamSupport.stream(issueRepository.findAll().spliterator(), false).collect(Collectors.toList())
+        return issueRepository.findAll().toList()
     }
 
     override fun issueBook(isBn: String, issueEntity: IssueEntity): IssueEntity {
         bookRepository.findById(isBn).map { book ->
-            val existingBook = book.copy(quantity = book.quantity - 1)
+            val existingBook = book.copy(quantity = book.quantity - issueEntity.quantity)
             bookRepository.save(existingBook)
+            if (existingBook.quantity < 1){
+                bookRepository.deleteById(isBn)
+            }
         }
         return issueRepository.save(issueEntity)
     }
@@ -63,5 +66,14 @@ class BooksServiceImpl(
 
     override fun deleteBook(isbn: String) {
         bookRepository.deleteById(isbn)
+    }
+
+
+    override fun clearIssues() {
+        issueRepository.deleteAll()
+    }
+
+    override fun clearBooks() {
+        bookRepository.deleteAll()
     }
 }
