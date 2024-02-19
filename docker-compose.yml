@@ -1,6 +1,6 @@
 services:
   db:
-    container_name: postgres
+    container_name: postgres-db
     image: postgres
     environment:
       POSTGRES_DB: kotlinbackend
@@ -19,3 +19,14 @@ services:
     ports:
       - "5050:80"
     restart: unless-stopped
+  kotlin-backend:
+    container_name: kotlin-backend
+    image: timife/kotlin-backend:1.2
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/kotlinbackend
+      SPRING_DATASOURCE_USERNAME: timife
+      SPRING_DATASOURCE_PASSWORD: secret
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
