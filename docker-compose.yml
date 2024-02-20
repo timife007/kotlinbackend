@@ -3,14 +3,14 @@ services:
     container_name: postgres-db
     image: postgres
     env_file:
-      - ./env/postgres.env
+      - ./kotlinbackend/env/postgres.env
     ports:
       - "5432:5432"
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
     env_file:
-      - ./env/pgadmin.env
+      - ./kotlinbackend/env/pgadmin.env
     ports:
       - "5050:80"
     restart: unless-stopped
@@ -18,7 +18,7 @@ services:
     container_name: kotlin-backend
     image: timife/kotlin-backend:1.2
     env_file:
-      - ./env/kotlinbackend.env
+      - ./kotlinbackend/env/kotlinbackend.env
     ports:
       - "8081:8081"
     depends_on:
