@@ -8,9 +8,9 @@ COPY .gradle ./.gradle
 COPY gradlew .
 COPY gradlew.bat .
 COPY settings.gradle.kts .
-#ENV  POSTGRES_DB=kotlinbackend \
-#     POSTGRES_PASSWORD=secret \
-#     POSTGRES_USER=timife
+ENV  POSTGRES_DB=kotlinbackend \
+     POSTGRES_PASSWORD=secret \
+     POSTGRES_USER=timife
 RUN ./gradlew bootJar
 
 # Stage 2: Run the application

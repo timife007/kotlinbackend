@@ -31,6 +31,11 @@ class BooksController(
         }
     }
 
+    @GetMapping("/health")
+    fun healthCheck(): ResponseEntity<Any>{
+        return ResponseEntity.ok("Healthy")
+    }
+
     @PostMapping
     fun createBook(@RequestBody book: BookDto): ResponseEntity<Any> {
         val bookEntity = book.toBookEntity()

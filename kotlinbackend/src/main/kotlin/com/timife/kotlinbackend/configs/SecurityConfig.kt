@@ -26,7 +26,7 @@ class SecurityConfig(
         http
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers("/api/login", "/api/admin/signup")
+                it.requestMatchers("/api/login", "/api/admin/signup", "/books/health")
                     .permitAll()
                     .requestMatchers("/user","/books/issued", "/books/issue/**")
                     .hasRole(Role.ADMIN.name)
